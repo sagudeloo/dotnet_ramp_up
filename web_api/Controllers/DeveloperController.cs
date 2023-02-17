@@ -119,4 +119,53 @@ public class DeveloperController : ControllerBase
             return BadRequest();
         }
     }
+
+    [HttpPatch]
+    [Route("/developer/{id:int}")]
+    public async Task<dynamic> editDeveloper(int id, string firstName, string lastName, int age, string typeOfDeveloper, int workedHours, double salaryByHour, string email)
+    {
+        if (firstName.Length < 3 || firstName.Length > 20) return BadRequest($"First Name does not comply the lenght policy. {firstName.Length < 3} {firstName.Length > 20}");
+        if (lastName.Length < 3 || lastName.Length > 20) return BadRequest("Last Name does not comply the lenght policy.");
+        if (age <= 10) return BadRequest("Does not comply the age policy.");
+        if (workedHours < 30 || workedHours > 50) return BadRequest("Does not comply worked time policy.");
+        if (salaryByHour < 13) return BadRequest("Does not comply the salary policy.");
+        DeveloperType developerType;
+        switch (typeOfDeveloper.ToLower())
+        {
+            case "junior":
+                developerType = DeveloperType.Junior;
+            break;
+            case "intermediate":
+                developerType = DeveloperType.Intermediate;
+            break;
+            case "senior":
+                developerType = DeveloperType.Senior;
+            break;
+            case "lead":
+                developerType = DeveloperType.Lead;
+            break;
+            default:
+                return BadRequest("Does not match any type of developer policy.");
+        }
+        try
+        {
+            var developer = await (from dev in db.Developers
+                                where dev.developerId.Equals(id)
+                                select dev).FirstOrDefaultAsync();
+            
+            developer.firstName = firstName;
+            developer.lastName = lastName;
+            developer.age = age;
+            developer.type = developerType;
+            developer.workedHours = workedHours;
+            developer.salaryByHour = salaryByHour;
+            developer.email = email;
+            await db.SaveChangesAsync();
+            return developer;
+        }
+        catch (System.Exception)
+        {
+            return BadRequest();
+        }
+    }
 }
