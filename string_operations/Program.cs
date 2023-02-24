@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Running;
 
 namespace string_operations;
@@ -11,9 +12,16 @@ class Program
     }
 }
 
+[MemoryDiagnoser]
+[Orderer(SummaryOrderPolicy.FastestToSlowest)]
 public class MyBenchmarks
 {
     public static string[] names = {"Stiven","Maikol","Salome"};
+
+    public MyBenchmarks()
+    {
+        
+    }
     
     [Benchmark]
     public void plusOperatorConcat() {
