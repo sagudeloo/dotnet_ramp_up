@@ -7,8 +7,7 @@ class Program
         exerciseOne("John","25","test@test.com");
         Console.WriteLine("____________________\n");
         // Exercise 2
-        int[] numbers = {2,4,5,8,10};
-        Console.WriteLine(exerciseTwo(numbers));
+        Console.WriteLine(exerciseTwo(2,4,5,8,10,84,65));
         Console.WriteLine("____________________\n");
         // Exercise 3
         string salary = Console.ReadLine();
@@ -19,12 +18,10 @@ class Program
     }
 
     static void exerciseOne(string name, string age, string email){
-        Console.WriteLine($"Name: {name}");
-        Console.WriteLine($"Age: {age}");
-        Console.WriteLine($"Email: {email}");
+        Console.WriteLine($"Name: {name}\nAge: {age}\nEmail: {email}");
     }
 
-    static string exerciseTwo(int[] numbers){
+    static string exerciseTwo(params int[] numbers){
         int sum = 0;
         string stringSum = "";
         for (int i = 0; i < numbers.Length; i++){
