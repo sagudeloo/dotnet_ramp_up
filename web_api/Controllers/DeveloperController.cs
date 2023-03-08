@@ -8,59 +8,52 @@ namespace web_api.Controllers;
 [Route("developers")]
 public class DeveloperController : ControllerBase
 {
+    private readonly ILogger<DeveloperController> _logger;
     private readonly DatabaseContext db;
+    private readonly DeveloperValidator developerValidator;
 
-    public DeveloperController(DatabaseContext databaseContext){
+    public DeveloperController(ILogger<DeveloperController> logger, DatabaseContext databaseContext){
+        _logger = logger;
         db = databaseContext;
+        developerValidator = new();
     }
 
     [HttpGet]
-    public async Task<dynamic> list(string? firstName, string? lastName, int? age, int? workedHours)
+    public async Task<dynamic> list(string? firstName, string? lastName, int? age = -1, int? workedHours = -1)
     {
         await db.Database.EnsureCreatedAsync();
+        var tempDevelopers = db.Developers.AsEnumerable();
         
-        if (firstName != default(string) && lastName != default(string) && age != default(int) && workedHours != default(int))
+        try
         {
-            try
+            _logger.LogInformation($"DbSet developers type: {db.Developers.GetType()} \nTemp developers type: {tempDevelopers.GetType()}");
+            if (firstName != default(string))
             {
-                var developer = from dev in db.Developers
-                                    where dev.firstName.Equals(firstName) && dev.firstName.Equals(firstName) && dev.firstName.Equals(firstName) && dev.firstName.Equals(firstName)
-                                    select dev;
-                return developer;
+                tempDevelopers = tempDevelopers.Where(dev => dev.firstName.IndexOf(firstName, StringComparison.InvariantCultureIgnoreCase) > -1);
             }
-            catch (System.Exception)
+            if (lastName != default(string))
             {
-                return BadRequest();
+                tempDevelopers = tempDevelopers.Where(dev => dev.lastName.IndexOf(lastName, StringComparison.InvariantCultureIgnoreCase) > -1);
             }
+            if (age > -1)
+            {   
+                tempDevelopers = tempDevelopers.Where(dev => dev.age == age);
+            }
+            if (workedHours > -1)
+            {
+                tempDevelopers = tempDevelopers.Where(dev => dev.workedHours == workedHours);
+            }
+
         }
-        return db.Developers.ToList();
+        catch (System.Exception)
+        {
+            return BadRequest();
+        }
+        return tempDevelopers.ToList();
     }
     [HttpPost]
-    public async Task<dynamic> create(string firstName, string lastName, int age, string typeOfDeveloper, int workedHours, double salaryByHour, string email)
+    public async Task<dynamic> create(string firstName, string lastName, int age, DeveloperType developerType, int workedHours, double salaryByHour, string email)
     {   
-        if (firstName.Length < 3 || firstName.Length > 20) return BadRequest($"First Name does not comply the lenght policy. {firstName.Length < 3} {firstName.Length > 20}");
-        if (lastName.Length < 3 || lastName.Length > 20) return BadRequest("Last Name does not comply the lenght policy.");
-        if (age <= 10) return BadRequest("Does not comply the age policy.");
-        if (workedHours < 30 || workedHours > 50) return BadRequest("Does not comply worked time policy.");
-        if (salaryByHour < 13) return BadRequest("Does not comply the salary policy.");
-        DeveloperType developerType;
-        switch (typeOfDeveloper.ToLower())
-        {
-            case "junior":
-                developerType = DeveloperType.Junior;
-            break;
-            case "intermediate":
-                developerType = DeveloperType.Intermediate;
-            break;
-            case "senior":
-                developerType = DeveloperType.Senior;
-            break;
-            case "lead":
-                developerType = DeveloperType.Lead;
-            break;
-            default:
-                return BadRequest("Does not match any type of developer policy.");
-        }
         Developer developer = new Developer()
         {
             firstName = firstName,
@@ -71,6 +64,16 @@ public class DeveloperController : ControllerBase
             salaryByHour = salaryByHour,
             email = email
         };
+        var results = developerValidator.Validate(developer);
+        if (! results.IsValid)
+        {
+                string errorsString = "";
+            foreach (var error in results.Errors)
+            {
+                errorsString += $"Property {error.PropertyName} failed validation. Error was: {error.ErrorMessage}";
+            }
+            return BadRequest(errorsString);
+        }
         try
         {
             await db.Database.EnsureCreatedAsync();
@@ -120,33 +123,10 @@ public class DeveloperController : ControllerBase
         }
     }
 
-    [HttpPatch]
+    [HttpPut]
     [Route("/developer/{id:int}")]
-    public async Task<dynamic> editDeveloper(int id, string firstName, string lastName, int age, string typeOfDeveloper, int workedHours, double salaryByHour, string email)
+    public async Task<dynamic> editDeveloper(int id, string firstName, string lastName, int age, DeveloperType developerType, int workedHours, double salaryByHour, string email)
     {
-        if (firstName.Length < 3 || firstName.Length > 20) return BadRequest($"First Name does not comply the lenght policy. {firstName.Length < 3} {firstName.Length > 20}");
-        if (lastName.Length < 3 || lastName.Length > 20) return BadRequest("Last Name does not comply the lenght policy.");
-        if (age <= 10) return BadRequest("Does not comply the age policy.");
-        if (workedHours < 30 || workedHours > 50) return BadRequest("Does not comply worked time policy.");
-        if (salaryByHour < 13) return BadRequest("Does not comply the salary policy.");
-        DeveloperType developerType;
-        switch (typeOfDeveloper.ToLower())
-        {
-            case "junior":
-                developerType = DeveloperType.Junior;
-            break;
-            case "intermediate":
-                developerType = DeveloperType.Intermediate;
-            break;
-            case "senior":
-                developerType = DeveloperType.Senior;
-            break;
-            case "lead":
-                developerType = DeveloperType.Lead;
-            break;
-            default:
-                return BadRequest("Does not match any type of developer policy.");
-        }
         try
         {
             var developer = await (from dev in db.Developers
@@ -160,6 +140,16 @@ public class DeveloperController : ControllerBase
             developer.workedHours = workedHours;
             developer.salaryByHour = salaryByHour;
             developer.email = email;
+            var results = developerValidator.Validate(developer);
+            if (! results.IsValid)
+            {
+                    string errorsString = "";
+                foreach (var error in results.Errors)
+                {
+                    errorsString += $"Property {error.PropertyName} failed validation. Error was: {error.ErrorMessage}";
+                }
+                return BadRequest(errorsString);
+            }
             await db.SaveChangesAsync();
             return developer;
         }

@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
+using FluentValidation;
 
 namespace web_api.Models;
 
@@ -15,6 +17,10 @@ public class Developer
     public int developerId { get; set; }
     public string firstName { get; set; }
     public string lastName { get; set; }
+    [NotMapped]
+    public string fullName { get {
+        return $"{firstName} {lastName}";
+    }}
     public int age { get; set; }
     public DeveloperType type { get; set; }
     public int workedHours { get; set; }
@@ -22,6 +28,18 @@ public class Developer
     public string email { get; set; }
     
 
+}
+
+public class DeveloperValidator: AbstractValidator<Developer>
+{
+    public DeveloperValidator()
+    {
+        RuleFor(developer => developer.firstName).NotEmpty().MinimumLength(3).MaximumLength(20);
+        RuleFor(developer => developer.lastName).NotEmpty().MinimumLength(3).MaximumLength(30);
+        RuleFor(developer => developer.age).NotEmpty().GreaterThan(10);
+        RuleFor(developer => developer.workedHours).NotEmpty().GreaterThan(30).LessThan(50);
+        RuleFor(developer => developer.salaryByHour).NotEmpty().GreaterThan(13).LessThan(50);
+    }
 }
 
 public class DatabaseContext : DbContext
