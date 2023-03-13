@@ -3,6 +3,16 @@ using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Running;
 
 namespace string_operations;
+
+/*
+ * To Practice:
+ * Naming Conventions
+ *
+ * Increment:
+ * - Remove the foreach in all method to compare the benchmark results.
+ * - Analyze the different algorithms using https://sharplab.io/ and let's talk about it. 
+ */
+
 class Program
 {
     static void Main(string[] args)
@@ -18,6 +28,7 @@ public class MyBenchmarks
 {
     public static string[] names = {"Stiven","Maikol","Salome"};
 
+    // By default an Empty Contructor is created, this constructor is not needed. 
     public MyBenchmarks()
     {
         
