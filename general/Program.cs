@@ -1,6 +1,16 @@
 ﻿namespace general;
 class Program
 {
+    /*
+     * To practice:
+     * - Review Naming Convention.
+     *
+     * Additional Material:
+     * https://github.com/pslcorp/perficient.training.content/blob/main/content/guides-lectures/conventions.md
+     * https://learn.microsoft.com/en-us/dotnet/csharp/advanced-topics/interop/using-type-dynamic
+     * https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/member-overloading
+     */
+
     static void Main(string[] args)
     {   
         int salary1 = 33;
