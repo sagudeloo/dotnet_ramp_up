@@ -1,5 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+/*
+ * Comments:
+ * In Developer Class the Type could be an Enum (https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/enum)
+ * All Code was written in the same class. Single Responsability Pattern shoud be reviewed (https://dotnettutorials.net/lesson/single-responsibility-principle/#:~:text=SRP%20in%20C%23.-,What%20is%20the%20Single%20Responsibility%20Principle%20in%20C%23%3F,only%20one%20responsibility%20to%20do.)
+ * POO can be applied to solve the issue. 
+ * Refactor this exercise to use Single Responsability and POO. 
+ */
+
 namespace developer_salary_calculator_two;
 class Program
 {   

@@ -11,6 +11,7 @@ class Program
      * To answer:
      * What's the difference between StreamReader and FileStream?
      * What is an Stream?
+     *
      */
 
     static void Main(string[] args)
@@ -23,6 +24,7 @@ class Program
             List<int> workedHoursList = new List<int>();
             List<double> salaryPerHourList = new List<double>();
 
+            // Developer class missed.
             while (!reader.EndOfStream)
             {
                 line = reader.ReadLine();
