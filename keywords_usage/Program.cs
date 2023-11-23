@@ -1,6 +1,21 @@
 ﻿namespace keywords_usage;
 class Program
 {
+    /*
+     *Additional documents. 
+     *https://www.pluralsight.com/guides/csharp-in-out-ref-parameters
+     *https://github.com/pslcorp/perficient.training.content/blob/main/content/guides-lectures/conventions.md
+     *https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/nameof
+     *
+     * To improve:
+     * - Practice an review naming conventions. 
+     *
+     * Increment:
+     * - Change the exercise to learn how to use in, out and ref.
+     * - Review the naming convention. 
+     * - In the exercise one refactor the code to use the operator nameof
+     */
+
     static void Main(string[] args)
     {   
         // Exercise 1
@@ -17,10 +32,12 @@ class Program
 
     }
 
+    //Review naming convention. 
     static void exerciseOne(string name, string age, string email){
         Console.WriteLine($"Name: {name}\nAge: {age}\nEmail: {email}");
     }
 
+    //Review naming convention. 
     static string exerciseTwo(params int[] numbers){
         int sum = 0;
         string stringSum = "";

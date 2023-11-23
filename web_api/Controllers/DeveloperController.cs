@@ -26,6 +26,7 @@ public class DeveloperController : ControllerBase
         
         try
         {
+            // Usually there is not Bussiness Logic in the controller, and should be placed in a different Layer.
             _logger.LogInformation($"DbSet developers type: {db.Developers.GetType()} \nTemp developers type: {tempDevelopers.GetType()}");
             if (firstName != default(string))
             {
@@ -49,9 +50,22 @@ public class DeveloperController : ControllerBase
         {
             return BadRequest();
         }
+
+        // How do you handle an error here? What happened if an error is raised here.
+        /*
+         * https://learn.microsoft.com/en-us/aspnet/core/fundamentals/error-handling?view=aspnetcore-7.0
+         *
+         */
         return tempDevelopers.ToList();
     }
     [HttpPost]
+    /*
+     * Here you can try something like as parameter:
+     * ([FromBody] Developer developer)
+     * https://learn.microsoft.com/en-us/aspnet/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api
+     *
+     */
+
     public async Task<dynamic> create(string firstName, string lastName, int age, DeveloperType developerType, int workedHours, double salaryByHour, string email)
     {   
         Developer developer = new Developer()

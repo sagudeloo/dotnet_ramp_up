@@ -3,6 +3,17 @@
 namespace developer_salary_calculator;
 class Program
 {
+    /*
+     * To Practice:
+     * Refactor the code using FileStream
+     * https://learn.microsoft.com/en-us/dotnet/api/system.io.filestream?view=net-8.0
+     *
+     * To answer:
+     * What's the difference between StreamReader and FileStream?
+     * What is an Stream?
+     *
+     */
+
     static void Main(string[] args)
     {
         using(var reader = new StreamReader(@"C:\Users\stiven.agudeloo\Projects\perficient\dotnet\developer_salary_calculator\developers.csv"))
@@ -13,6 +24,7 @@ class Program
             List<int> workedHoursList = new List<int>();
             List<double> salaryPerHourList = new List<double>();
 
+            // Developer class missed.
             while (!reader.EndOfStream)
             {
                 line = reader.ReadLine();

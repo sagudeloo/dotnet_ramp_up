@@ -2,6 +2,15 @@
 using Newtonsoft.Json.Linq;
 
 namespace developer_todo;
+
+/*
+ * Comments:
+ *  - Naming Convention
+ *  - Take a look and practice SOLID (https://www.c-sharpcorner.com/UploadFile/damubetha/solid-principles-in-C-Sharp/)
+ *      https://learn.microsoft.com/en-us/archive/msdn-magazine/2014/may/csharp-best-practices-dangers-of-violating-solid-principles-in-csharp
+ *      https://dotnetcoretutorials.com/2019/10/17/solid-in-c-single-responsibility-principle/
+ */
+
 class Program
 {   
     static readonly HttpClient client = new HttpClient();
